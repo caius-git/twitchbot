@@ -180,7 +180,7 @@ while True:
                     chat(s, "@capu_streams hey there :)")
 
                 if "!capucommands" in message_split[0].lower():
-                    chat(s, "@" + new_username + " https://github.com/caius-git/twitchbot/blob/master/commands.md")
+                    chat(s, "@" + username + " https://github.com/caius-git/twitchbot/blob/master/commands.md")
 
                 print(username + ": " + message)
                 new_username = ""
