@@ -112,7 +112,7 @@ while True:
             if random_number == 1:
                 current_time = datetime.datetime.now()
                 chat(s, "@" + new_username + " You won the lottery PogChamp" + " Total attempts: " + new_number)
-                lottofile = open("lottowinners.md", "a+")
+                lottofile = open("C:/Users/CJ/PycharmProjects/twitchbot/lottowinners.md", "a+")
                 lottofile.write(username + " has won the lottery! This happened " + str(current_time) + ".\r\n")
                 lottofile.close()
             else:
