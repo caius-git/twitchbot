@@ -4,6 +4,9 @@ import time
 import re
 import random
 import threading
+import datetime
+import fileinput
+import sys
 
 
 while True:
@@ -29,6 +32,29 @@ while True:
         def lotto_count_reset():
             global lotto_counter
             lotto_counter = 0
+
+        def lotto_count():
+            lottocounterfile = open("lottocounter.md", "r+")
+            if lottocounterfile.mode == "r+":
+                lotto_counter_contents = lottocounterfile.read()
+                if new_username in lotto_counter_contents:
+                    index = lotto_counter_contents.index(new_username)
+                    lottocounterfile.seek(index)
+                    line = lotto_counter_contents[index:]
+                    i = line.split("\n")[0]
+                    word = i.split()[-1]
+                    your_number = word
+                    new_number = int(your_number) + 1
+                    lotto_counter_contents = lotto_counter_contents.replace(new_username + " " + your_number, new_username + " " + str(new_number))
+                    lottocounterfile.seek(0)
+                    lottocounterfile.truncate(0)
+                    lottocounterfile.write(lotto_counter_contents)
+                    lottocounterfile.close()
+                    return str(new_number)
+                else:
+                    lottocounterfile.write(username + " 1 " + "\n")
+                    lottocounterfile.close()
+                    return str(1)
 
 
         def ban(sock, user):
@@ -66,16 +92,21 @@ while True:
 
 
         def lotto_roll():
+            new_number = lotto_count()
             random_number = (random.randint(1, 7509579))
             if random_number == 1:
-                chat(s, "@" + new_username + " You won the lottery PogChamp")
+                current_time = datetime.datetime.now()
+                chat(s, "@" + new_username + " You won the lottery PogChamp" + " Total attempts: " + new_number)
+                lottofile = open("lottowinners.md", "a+")
+                lottofile.write(username + " has won the lottery! This happened " + str(current_time) + ".\r\n")
+                lottofile.close()
             else:
                 if lotto_counter >= 1:
-                    chat(s, "@" + new_username + " You didn't win the lottery FeelsBadMan " + str(lotto_counter))
+                    chat(s, "@" + new_username + " You didn't win the lottery FeelsBadMan " + " You have tried " + new_number + " times.")
                     timer.cancel()
                     lotto_no_timeout()
                 else:
-                    chat(s, "@" + new_username + " You didn't win the lottery FeelsBadMan")
+                    chat(s, "@" + new_username + " You didn't win the lottery FeelsBadMan" + " You have tried " + new_number + " times.")
                     lotto_no_timeout()
 
         def timeout(sock, user, secs=600):
@@ -125,9 +156,6 @@ while True:
                     chat(s, "@" + username + " HELL YEAH BROTHER KKona")
                 elif "freedom" in message.lower():
                     chat(s, "@" + username + " HELL YEAH BROTHER KKona")
-
-                if "test" in message_split[0].lower():
-                    chat(s, "test")
 
                 if "!lotto" in message_split[0].lower() and "help" not in message:
                     new_username = new_username + username
