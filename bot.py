@@ -8,6 +8,21 @@ import datetime
 import fileinput
 import sys
 
+s = socket.socket()
+
+
+def connect():
+    s.connect((cfg.HOST, cfg.PORT))
+    s.send("PASS {}\r\n".format(cfg.PASS).encode("utf-8"))
+    s.send("NICK {}\r\n".format(cfg.USER).encode("utf-8"))
+    s.send("JOIN {}\r\n".format(cfg.CHANNEL).encode("utf-8"))
+
+
+# if __name__ == "__main__":
+#     main()
+
+connect()
+
 
 while True:
     try:
@@ -16,11 +31,11 @@ while True:
 
         CHAT_MSG = re.compile(r"^:\w+!\w+@\w+\.tmi\.twitch\.tv PRIVMSG #\w+ :")
 
-        s = socket.socket()
-        s.connect((cfg.HOST, cfg.PORT))
-        s.send("PASS {}\r\n".format(cfg.PASS).encode("utf-8"))
-        s.send("NICK {}\r\n".format(cfg.USER).encode("utf-8"))
-        s.send("JOIN {}\r\n".format(cfg.CHANNEL).encode("utf-8"))
+        # s = socket.socket()
+        # s.connect((cfg.HOST, cfg.PORT))
+        # s.send("PASS {}\r\n".format(cfg.PASS).encode("utf-8"))
+        # s.send("NICK {}\r\n".format(cfg.USER).encode("utf-8"))
+        # s.send("JOIN {}\r\n".format(cfg.CHANNEL).encode("utf-8"))
 
 
         def chat(sock, msg):
@@ -214,4 +229,6 @@ while True:
                 new_username = ""
     except Exception:
         print("[+] Error. Restarting...")
+        # main()
+        connect()
         pass
